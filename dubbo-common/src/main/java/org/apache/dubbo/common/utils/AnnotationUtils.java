@@ -469,7 +469,7 @@ public interface AnnotationUtils {
     }
 
     /**
-     * Get the default value of attribute on the specified annotation
+     * 获取指定注解上的属性默认值
      *
      * @param annotationType the type of {@link Annotation}
      * @param attributeName  the name of attribute
@@ -483,7 +483,7 @@ public interface AnnotationUtils {
     }
 
     /**
-     * Filter default value of Annotation type
+     * Annotation 类型的过滤器默认值
      * @param annotationType annotation type from {@link Annotation#annotationType()}
      * @param attributes
      * @return
@@ -491,11 +491,13 @@ public interface AnnotationUtils {
     static Map<String, Object> filterDefaultValues(Class<? extends Annotation> annotationType, Map<String, Object> attributes) {
         Map<String, Object> filteredAttributes = new LinkedHashMap<>(attributes.size());
         attributes.forEach((key,val) -> {
+            //判断当前val 值 是否是 当前key的默认值
             if (!Objects.deepEquals(val, getDefaultValue(annotationType, key))) {
+                //如果不是默认值 则加入到map中
                 filteredAttributes.put(key, val);
             }
         });
-        // remove void class, compatible with spring 3.x
+        // 删除 void 类，与 spring 3.x 兼容
         Object interfaceClassValue = filteredAttributes.get("interfaceClass");
         if (interfaceClassValue instanceof String && StringUtils.isEquals((String) interfaceClassValue, "void")) {
             filteredAttributes.remove("interfaceClass");

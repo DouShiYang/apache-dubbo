@@ -65,6 +65,11 @@ public class SpringCompatUtils {
         return factoryMethodMetadataEnabled;
     }
 
+    /**
+     * 根据bean的定义信息 获取返回类型
+     * @param annotatedBeanDefinition 类的定义信息
+     * @return
+     */
     public static String getFactoryMethodReturnType(AnnotatedBeanDefinition annotatedBeanDefinition) {
         try {
             if (isFactoryMethodMetadataEnabled()) {

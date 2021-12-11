@@ -87,9 +87,8 @@ import static org.springframework.context.annotation.AnnotationConfigUtils.CONFI
 import static org.springframework.util.ClassUtils.resolveClassName;
 
 /**
- * A {@link BeanFactoryPostProcessor} used for processing of {@link Service @Service} annotated classes and annotated bean in java config classes.
- * It's also the infrastructure class of XML {@link BeanDefinitionParser} on &lt;dubbbo:annotation /&gt;
- *
+ *一个 {@link BeanFactoryPostProcessor} 用于处理 {@link Service @Service} 注释类和 java 配置类中的注释 bean。
+ * 也是<dubbbo:annotation>上XML {@link BeanDefinitionParser}的基础类
  *
  * @see AnnotationBeanDefinitionParser
  * @see BeanDefinitionRegistryPostProcessor
@@ -153,29 +152,31 @@ public class ServiceAnnotationPostProcessor implements BeanDefinitionRegistryPos
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (this.registry == null) {
-            // In spring 3.x, may be not call postProcessBeanDefinitionRegistry()
+            // 在 spring 3.x 中，可能不会调用 postProcessBeanDefinitionRegistry()
             this.registry = (BeanDefinitionRegistry) beanFactory;
         }
 
-        // scan bean definitions
+        // 扫描bean
         String[] beanNames = beanFactory.getBeanDefinitionNames();
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+            //获取注解中的属性值
             Map<String, Object> annotationAttributes = getServiceAnnotationAttributes(beanDefinition);
             if (annotationAttributes != null) {
-                // process @DubboService at java-config @bean method
+                // 在 java-config @bean 方法中处理 @DubboService
+                //
                 processAnnotatedBeanDefinition(beanName, (AnnotatedBeanDefinition) beanDefinition, annotationAttributes);
             }
         }
 
         if (!scaned) {
-            // In spring 3.x, may be not call postProcessBeanDefinitionRegistry(), so scan service class here
+            // 在spring 3.x中，可能不会调用postProcessBeanDefinitionRegistry()，所以这里扫描服务类
             scanServiceBeans(resolvedPackagesToScan, registry);
         }
     }
 
     /**
-     * Scan and registers service beans whose classes was annotated {@link Service}
+     * 扫描并注册类被注解的服务 bean {@link Service}
      *
      * @param packagesToScan The base packages to scan
      * @param registry       {@link BeanDefinitionRegistry}
@@ -514,8 +515,8 @@ public class ServiceAnnotationPostProcessor implements BeanDefinitionRegistryPos
     }
 
     /**
-     * Get dubbo service annotation class at java-config @bean method
-     * @return return service annotation attributes map if found, or return null if not found.
+     * 在java-config @bean 方法中获取dubbo 服务注解类
+     * @return 找到则返回服务注解属性映射，未找到则返回null。
      */
     private Map<String, Object> getServiceAnnotationAttributes(BeanDefinition beanDefinition) {
         if (beanDefinition instanceof AnnotatedBeanDefinition) {
@@ -538,29 +539,29 @@ public class ServiceAnnotationPostProcessor implements BeanDefinitionRegistryPos
     }
 
     /**
+     * 处理
      * process @DubboService at java-config @bean method
      * <pre class="code">
      * &#064;Configuration
      * public class ProviderConfig {
-     *
      *      &#064;Bean
      *      &#064;DubboService(group="demo", version="1.2.3")
      *      public DemoService demoService() {
      *          return new DemoServiceImpl();
      *      }
-     *
      * }
      * </pre>
-     * @param refServiceBeanName
-     * @param refServiceBeanDefinition
-     * @param attributes
+     * @param refServiceBeanName bean名称
+     * @param refServiceBeanDefinition  bean的定义类
+     * @param attributes 属性值
      */
     private void processAnnotatedBeanDefinition(String refServiceBeanName, AnnotatedBeanDefinition refServiceBeanDefinition, Map<String, Object> attributes) {
 
         Map<String, Object> serviceAnnotationAttributes = new LinkedHashMap<>(attributes);
 
-        // get bean class from return type
+        //从返回类型获取 bean 类
         String returnTypeName = SpringCompatUtils.getFactoryMethodReturnType(refServiceBeanDefinition);
+        //从classLoader中 获取 返回的类信息
         Class<?> beanClass = resolveClassName(returnTypeName, classLoader);
 
         String serviceInterface = resolveInterfaceName(serviceAnnotationAttributes, beanClass);

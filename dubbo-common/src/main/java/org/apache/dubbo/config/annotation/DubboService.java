@@ -27,33 +27,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Class-level annotation used for declaring Dubbo service.
- * <p/>
- * <b>1. Using with java config bean:</b>
- * <p/>
- * <b>This usage is recommended</b>.<br/>
- * It is more flexible on bean methods than on implementation classes, and is more compatible with Spring.
- * <pre>
- * &#64;Configuration
- * class ProviderConfiguration {
+ * 用于声明 Dubbo 服务的类级注解。
+ * 1. 与java config bean一起使用：
+ * 建议使用此用法。 它在 bean 方法上比在实现类上更灵活，并且与 Spring 更兼容。
+ *    @author jianyang
+ * @Configuration
+ *    class ProviderConfiguration {
+ *        @Bean
+ *        @DubboService(group="demo")
+ *        public DemoService demoServiceImpl() {
+ *            return new DemoServiceImpl();
+ *        }
+ *    }
  *
- *     &#64;Bean
- *     &#64;DubboService(group="demo")
- *     public DemoService demoServiceImpl() {
- *         return new DemoServiceImpl();
- *     }
- * }
- * </pre>
+ * 2.在服务的实现类上使用：
+ *    @DubboService(group="demo")
+ *    public class DemoServiceImpl implements DemoService {
+ *        ...
+ *    }
  *
- * <b>2. Using on implementation class of service:  </b>
- * <pre>
- * &#64;DubboService(group="demo")
- * public class DemoServiceImpl implements DemoService {
- *     ...
- * }
- * </pre>
- *
- * This usage causes the implementation class to rely on the Dubbo module.
+ * 这种用法导致实现类依赖 Dubbo 模块
  *
  *
  * @since 2.7.7
@@ -65,77 +58,77 @@ import java.lang.annotation.Target;
 public @interface DubboService {
 
     /**
-     * Interface class, default value is void.class
+     * 接口类，默认值为void.class
      */
     Class<?> interfaceClass() default void.class;
 
     /**
-     * Interface class name, default value is empty string
+     * 接口类名，默认值为空字符串
      */
     String interfaceName() default "";
 
     /**
-     * Service version, default value is empty string
+     * 服务版本，默认值为空字符串
      */
     String version() default "";
 
     /**
-     * Service group, default value is empty string
+     * 服务组，默认值为空字符串
      */
     String group() default "";
 
     /**
-     * Service path, default value is empty string
+     * 服务路径，默认值为空字符串
      */
     String path() default "";
 
     /**
-     * Whether to export service, default value is true
+     * 是否导出服务，默认为true
      */
     boolean export() default true;
 
     /**
-     * Service token, default value is false
+     * 服务令牌，默认值为false
      */
     String token() default "";
 
     /**
-     * Whether the service is deprecated, default value is false
+     * 服务是否被弃用，默认值为false
      */
     boolean deprecated() default false;
 
     /**
-     * Whether the service is dynamic, default value is true
+     * 服务是否动态，默认值为true
      */
     boolean dynamic() default true;
 
     /**
-     * Access log for the service, default value is ""
+     * 服务的访问日志，默认值为“”
      */
     String accesslog() default "";
 
     /**
-     * Maximum concurrent executes for the service, default value is 0 - no limits
+     * 服务的最大并发执行次数，默认值为 0 - 无限制
      */
     int executes() default -1;
 
     /**
-     * Whether to register the service to register center, default value is true
+     * 是否将服务注册到注册中心，默认值为true
      */
     boolean register() default true;
 
     /**
-     * Service weight value, default value is 0
+     * 服务权重值，默认为0
      */
     int weight() default -1;
 
     /**
-     * Service doc, default value is ""
+     * 服务文档，默认值为“”
      */
     String document() default "";
 
     /**
-     * Delay time for service registration, default value is 0
+     * 服务注册延迟时间，默认为0
      */
     int delay() default -1;
 
@@ -146,55 +139,54 @@ public @interface DubboService {
     String local() default "";
 
     /**
-     * Service stub name, use interface name + Local if not set
+     * 服务存根名称，如果未设置则使用接口名称+本地
      */
     String stub() default "";
 
     /**
-     * Cluster strategy, legal values include: failover, failfast, failsafe, failback, forking
-     * you can use {@link org.apache.dubbo.common.constants.ClusterRules#FAIL_FAST} ……
+     * 集群策略，合法值包括：failover、failfast、failsafe、failback、fork 可以使用 {@link org.apache.dubbo.common.constants.ClusterRulesFAIL_FAST}
      */
     String cluster() default ClusterRules.EMPTY;
 
     /**
-     * How the proxy is generated, legal values include: jdk, javassist
+     * 代理是如何生成的，合法值包括：jdk、javassist
      */
     String proxy() default "";
 
     /**
-     * Maximum connections service provider can accept, default value is 0 - connection is shared
+     * 服务提供者可以接受的最大连接数，默认值为 0 - 连接是共享的
      */
     int connections() default -1;
 
     /**
-     * The callback instance limit peer connection
+     * T回调实例限制对等连接
      * <p>
      * see org.apache.dubbo.common.constants.CommonConstants.DEFAULT_CALLBACK_INSTANCES
      */
     int callbacks() default -1;
 
     /**
-     * Callback method name when connected, default value is empty string
+     * C连接时的回调方法名称，默认值为空字符串
      */
     String onconnect() default "";
 
     /**
-     * Callback method name when disconnected, default value is empty string
+     * 断开连接时的回调方法名称，默认值为空字符串
      */
     String ondisconnect() default "";
 
     /**
-     * Service owner, default value is empty string
+     * 服务所有者，默认值为空字符串
      */
     String owner() default "";
 
     /**
-     * Service layer, default value is empty string
+     * 服务层，默认值为空字符串
      */
     String layer() default "";
 
     /**
-     * Service invocation retry times
+     * 服务调用重试次数
      *
      * @see org.apache.dubbo.common.constants.CommonConstants#DEFAULT_RETRIES
      */
@@ -208,105 +200,104 @@ public @interface DubboService {
     String loadbalance() default ClusterRules.EMPTY;
 
     /**
-     * Whether to enable async invocation, default value is false
+     * 是否开启异步调用，默认为false
      */
     boolean async() default false;
 
     /**
-     * Maximum active requests allowed, default value is 0
+     * 允许的最大活动请求数，默认值为 0
      */
     int actives() default -1;
 
     /**
-     * Whether the async request has already been sent, the default value is false
+     * 异步请求是否已经发送，默认值为false
      */
     boolean sent() default false;
 
     /**
-     * Service mock name, use interface name + Mock if not set
+     * 服务模拟名称，如果未设置，则使用接口名称 + Mock
      */
     String mock() default "";
 
     /**
-     * Whether to use JSR303 validation, legal values are: true, false
+     * 是否使用JSR303验证，合法值为：true、false
      */
     String validation() default "";
 
     /**
-     * Timeout value for service invocation, default value is 0
+     * 服务调用超时值，默认为0
      */
     int timeout() default -1;
 
     /**
-     * Specify cache implementation for service invocation, legal values include: lru, threadlocal, jcache
+     * 指定服务调用的缓存实现，合法值包括：lru、threadlocal、jcache
      */
     String cache() default "";
 
     /**
-     * Filters for service invocation
+     * 服务调用过滤器
      *
      * @see Filter
      */
     String[] filter() default {};
 
     /**
-     * Listeners for service exporting and unexporting
-     *
+     * 用于服务导出和取消导出的侦听器
      * @see ExporterListener
      */
     String[] listener() default {};
 
     /**
-     * Customized parameter key-value pair, for example: {key1, value1, key2, value2}
+     * 自定义参数键值对，例如：{key1, value1, key2, value2}
      */
     String[] parameters() default {};
 
     /**
-     * Application spring bean name
-     * @deprecated Do not set it and use the global Application Config
+     * 应用spring bean名称
+     * @deprecated 不要设置它并使用全局应用程序配置
      */
     @Deprecated
     String application() default "";
 
     /**
-     * Module spring bean name
+     * 模块 spring bean 名称
      */
     String module() default "";
 
     /**
-     * Provider spring bean name
+     * 提供者 spring bean 名称
      */
     String provider() default "";
 
     /**
-     * Protocol spring bean names
+     * 协议 spring bean 名称
      */
     String[] protocol() default {};
 
     /**
-     * Monitor spring bean name
+     * 监控 spring bean 名称
      */
     String monitor() default "";
 
     /**
-     * Registry spring bean name
+     * 注册表 spring bean 名称
      */
     String[] registry() default {};
 
     /**
-     * Service tag name
+     * 服务标签名称
      */
     String tag() default "";
 
     /**
-     * methods support
+     * 方法支持
      *
      * @return
      */
     Method[] methods() default {};
 
     /**
-     * the scope for referring/exporting a service, if it's local, it means searching in current JVM only.
+     * 引用导出服务的范围，如果是本地的，则表示仅在当前 JVM 中搜索。
      * @see org.apache.dubbo.rpc.Constants#SCOPE_LOCAL
      * @see org.apache.dubbo.rpc.Constants#SCOPE_REMOTE
      */

@@ -65,7 +65,7 @@ public class DubboAnnotationUtils {
     }
 
     /**
-     * Resolve the service interface name from @Service annotation attributes.
+     * 从@Service 注释属性解析服务接口名称。
      * <p/>
      * Note: the service interface class maybe not found locally if is a generic service.
      *
